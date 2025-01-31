@@ -1,107 +1,164 @@
 import 'package:flutter/material.dart';
-
-import 'absen/absen_screen.dart';
-import 'attend/attend_screen.dart';
-import 'attendance_history/attendance_history_screen.dart';
+import 'package:flutter_absensi/ui/absen/absen_screen.dart';
+import 'package:flutter_absensi/ui/attend/attend_screen.dart';
+import 'package:flutter_absensi/ui/attendance_history/attendance_history_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        canPop: false, //mengunci tombol back perangkat
-        // ignore: deprecated_member_use
-        onPopInvoked: (bool didPop){
-          if(didPop){
-            return;
-          }
-          _onWillPop(context);
-        },
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-              child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        child: InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AttendScreen()));
-                            },
-                            child: const Column(
-                              children: [
-                                Image(image: AssetImage('assets/images/ic_absen.png'),
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                SizedBox(height: 10,),
-                                Text('Absen Kehadiran', style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold
-                                ),)
-                              ],
-                            )
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        child:  InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AbsentScreen()));
-                            },
-                            child: const Column(
-                              children: [
-                                Image(image: AssetImage('assets/images/ic_leave.png'),
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                SizedBox(height: 10,),
-                                Text('Cuti / Izin', style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold
-                                ),)
-                              ],
-                            )
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        child: InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => AttendanceHistoryScreen()));
-                            },
-                            child: const Column(
-                              children: [
-                                Image(image: AssetImage('assets/images/ic_history.png'),
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                SizedBox(height: 10,),
-                                Text('Attendance History', style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold
-                                ),)
-                              ],
-                            )
-                        ),
-                      ),
-                    ],
-                  )
-              )
-          ),
-        )
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Attendify'),
+        ),
+        body: const AttendList(),
+      ),
     );
   }
 }
+
+class AttendList extends StatelessWidget {
+  const AttendList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // List data untuk setiap card
+    final List<Map<String, dynamic>> cards = [
+      {
+        'title': 'Data Collection of Attendance',
+        'total': 17,
+        'color': Colors.teal.shade300,
+        'image': 'https://media.istockphoto.com/id/1303715147/vector/organized-archive-searching-files-in-database-records-management-records-and-information.jpg?s=612x612&w=0&k=20&c=S5Pyxu6Y3YAS9Z3UN7Y28h74T-r2d8YX0Rsi7dxr_OA=', // URL gambar
+        'screen': AttendScreen(), // Screen tujuan
+      },
+      {
+        'title': 'Licensing and Leave',
+        'total': 3,
+        'color': Colors.green.shade200,
+        'image': 'https://5451430.fs1.hubspotusercontent-na1.net/hubfs/5451430/The%20Importance%20of%20an%20Attendance%20System%20Dashboard-%20Simplifying%20HR%20Management.jpg',
+        'screen': AbsentScreen(),
+      },
+      {
+        'title': 'History of Attendance',
+        'total': 20,
+        'color': Colors.greenAccent,
+        'image': 'https://thumbs.dreamstime.com/b/time-attendance-tracking-system-abstract-concept-vector-illustration-clock-interactive-management-app-employee-monitoring-318417497.jpg',
+        'screen': AttendanceHistoryScreen(),
+      },
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView.builder(
+        itemCount: cards.length,
+        itemBuilder: (context, index) {
+          final card = cards[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: AttendCard(
+              title: card['title'],
+              totals: card['total'],
+              color: card['color'],
+              image: card['image'],
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => card['screen'], // Screen tujuan
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AttendCard extends StatelessWidget {
+  final String title;
+  final int totals;
+  final Color color;
+  final String image;
+  final VoidCallback onTap;
+
+  const AttendCard({
+    super.key,
+    required this.title,
+    required this.totals,
+    required this.color,
+    required this.image,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        height: 200, // Tinggi card
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.8), // Warna overlay (semi transparan)
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(2, 2),
+            ),
+          ],
+          image: DecorationImage(
+            image: NetworkImage(image),
+            fit: BoxFit.cover, // Mengisi seluruh card
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.5), // Overlay transparan
+              BlendMode.darken,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Note: Filling in before the specified time',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                'Total Employees Today: $totals',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 Future<bool> _onWillPop(BuildContext context) async{
   return (await showDialog(

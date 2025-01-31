@@ -32,7 +32,7 @@ class _AbsentScreenState extends State<AbsentScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.grey.shade900,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -57,7 +57,7 @@ class _AbsentScreenState extends State<AbsentScreen> {
               Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.blueAccent,
+                  color: Colors.grey.shade800,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
@@ -66,7 +66,7 @@ class _AbsentScreenState extends State<AbsentScreen> {
                 child: const Row(
                   children: [
                     SizedBox(width: 12),
-                    Icon(Icons.maps_home_work_outlined),
+                    Icon(Icons.maps_home_work_outlined, color: Colors.white,),
                     SizedBox(width: 12),
                     Text(
                       "Please Fill out the form",
@@ -95,10 +95,10 @@ class _AbsentScreenState extends State<AbsentScreen> {
                       const TextStyle(color: Colors.grey, fontSize: 14),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blueAccent)),
+                          borderSide: BorderSide(color: Colors.grey.shade800)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue))),
+                          borderSide: BorderSide(color: Colors.grey.shade600))),
                 ),
               ),
               const Padding(
@@ -118,7 +118,7 @@ class _AbsentScreenState extends State<AbsentScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.blueAccent, width: 1.0),
+                    border: Border.all(color: Colors.grey.shade800, width: 1.0),
                   ),
                   child: DropdownButton(
                     dropdownColor: Colors.white,
@@ -171,8 +171,8 @@ class _AbsentScreenState extends State<AbsentScreen> {
                                       builder: (BuildContext context, Widget? child) {
                                         return Theme(
                                             data: Theme.of(context).copyWith(
-                                                colorScheme: const ColorScheme.light(
-                                                    primary: Colors.blueAccent,
+                                                colorScheme: ColorScheme.light(
+                                                    primary: Colors.grey.shade800,
                                                     onPrimary: Colors.white,
                                                     onSurface: Colors.black)),
                                             child: child!);
@@ -215,8 +215,8 @@ class _AbsentScreenState extends State<AbsentScreen> {
                                     builder: (BuildContext context, Widget? child) {
                                       return Theme(
                                           data: Theme.of(context).copyWith(
-                                              colorScheme: const ColorScheme.light(
-                                                  primary: Colors.blueAccent,
+                                              colorScheme: ColorScheme.light(
+                                                  primary: Colors.grey.shade800,
                                                   onPrimary: Colors.white,
                                                   onSurface: Colors.black)),
                                           child: child!);
@@ -260,9 +260,9 @@ class _AbsentScreenState extends State<AbsentScreen> {
                         color: Colors.white),
                     child: Material(
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.blueAccent,
+                      color: Colors.grey.shade800,
                       child: InkWell(
-                        splashColor: Colors.blue,
+                        splashColor: Colors.grey.shade600,
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
                           if (controllerName.text.isEmpty ||
@@ -270,8 +270,8 @@ class _AbsentScreenState extends State<AbsentScreen> {
                               fromController.text.isEmpty ||
                               toController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Row(
+                                SnackBar(
+                                  content: const Row(
                                     children: [
                                       Icon(
                                         Icons.info_outline,
@@ -283,7 +283,7 @@ class _AbsentScreenState extends State<AbsentScreen> {
                                       Text("Ups, please fill the form")
                                     ],
                                   ),
-                                  backgroundColor: Colors.blueAccent,
+                                  backgroundColor: Colors.grey.shade800,
                                   shape: StadiumBorder(),
                                   behavior: SnackBarBehavior.floating,
                                 ));
@@ -328,8 +328,8 @@ class _AbsentScreenState extends State<AbsentScreen> {
       setState(() {
         Navigator.of(context).pop();
         try {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Row(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Row(
               children: [
                 Icon(Icons.check_circle_outline, color: Colors.white),
                 SizedBox(width: 10),
@@ -339,15 +339,15 @@ class _AbsentScreenState extends State<AbsentScreen> {
                 ),
               ],
             ),
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Colors.grey.shade600,
             shape: StadiumBorder(),
             behavior: SnackBarBehavior.floating,
           ));
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const HomeScreen()));
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Row(
+          ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+            content: const Row(
               children: [
                 Icon(Icons.error_outline, color: Colors.white),
                 SizedBox(width: 10),
@@ -358,7 +358,7 @@ class _AbsentScreenState extends State<AbsentScreen> {
                 ),
               ],
             ),
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Colors.grey.shade600,
             shape: StadiumBorder(),
             behavior: SnackBarBehavior.floating,
           ));
@@ -371,8 +371,8 @@ class _AbsentScreenState extends State<AbsentScreen> {
     AlertDialog alert = AlertDialog(
         content: Row(
           children: [
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey.shade600),
             ),
             Container(
               margin: const EdgeInsets.only(left: 10),

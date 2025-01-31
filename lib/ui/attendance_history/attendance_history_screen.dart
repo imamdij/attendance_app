@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -7,198 +6,138 @@ class AttendanceHistoryScreen extends StatefulWidget {
   const AttendanceHistoryScreen({super.key});
 
   @override
-  State<AttendanceHistoryScreen> createState() =>
-      _AttendanceHistoryScreenState();
+  State<AttendanceHistoryScreen> createState() => _AttendanceHistoryScreenState();
 }
 
 class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
-  final CollectionReference dataCollection =
-  FirebaseFirestore.instance.collection('attendance_app');
+  final CollectionReference dataCollection = FirebaseFirestore.instance.collection('attendance_app');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.grey.shade900,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text("Attendance History",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
+        title: const Text(
+          "Attendance History",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: FutureBuilder<QuerySnapshot>(
-          future: dataCollection.get(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var data = snapshot.data!.docs;
-              return data.isNotEmpty
-                  ? ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      elevation: 5,
-                      margin: const EdgeInsets.all(10),
-                      color: Colors.white,
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                color: Colors.primaries[Random()
-                                    .nextInt(Colors.primaries.length)],
-                                borderRadius: BorderRadius.circular(50)),
-                            child: Center(
-                              child: Text(
-                                (data.isNotEmpty && data[index]['name'] != null)
-                                    ? data[index]['name'][0].toUpperCase()
-                                    : '-',
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 14),
+        future: dataCollection.get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text(
+                "No data found!",
+                style: TextStyle(fontSize: 20),
+              ),
+            );
+          } else {
+            var data = snapshot.data!.docs;
+            return ListView.builder(
+              padding: const EdgeInsets.all(10),
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                var item = data[index];
+                return Card(
+                  color: Colors.grey.shade100,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 1,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Center(
+                            child: Text(
+                              item['name'] != null ? item['name'][0].toUpperCase() : '-',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
+                        ),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildInfoRow('Name', item['name']),
+                              _buildInfoRow('Address', item['address']),
+                              _buildInfoRow('Status', item['status']),
+                              _buildInfoRow('Date & Time', item['dateTime']),
+                            ],
                           ),
-                          Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Expanded(
-                                          flex: 4,
-                                          child: Text(
-                                            'name',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      const Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            ':',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      Expanded(
-                                          child: Text(
-                                            data[index]['name'],
-                                            style: const TextStyle(
-                                                color: Colors.black, fontSize: 14),
-                                          ))
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Expanded(
-                                          flex: 4,
-                                          child: Text(
-                                            'address',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      const Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            ':',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      Expanded(
-                                          child: Text(
-                                            data[index]['address'],
-                                            style: const TextStyle(
-                                                color: Colors.black, fontSize: 14),
-                                          ))
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Expanded(
-                                          flex: 4,
-                                          child: Text(
-                                            'status',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      const Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            ':',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      Expanded(
-                                          child: Text(
-                                            data[index]['status'],
-                                            style: const TextStyle(
-                                                color: Colors.black, fontSize: 14),
-                                          ))
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Expanded(
-                                          flex: 4,
-                                          child: Text(
-                                            'dateTime',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      const Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            ':',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                          )),
-                                      Expanded(
-                                          child: Text(
-                                            data[index]['dateTime'],
-                                            style: const TextStyle(
-                                                color: Colors.black, fontSize: 14),
-                                          ))
-                                    ],
-                                  )
-                                ],
-                              ))
-                        ],
-                      ),
-                    );
-                  })
-                  : const Center(
-                child: Text(
-                  "Ups, data not found!",
-                  style: TextStyle(fontSize: 20),
-                ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-                ),
-              );
-            }
-          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Text(
+            '$label: ',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

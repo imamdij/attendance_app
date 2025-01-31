@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'Sofia Pro',
         cardTheme: const CardTheme(
           surfaceTintColor: Colors.white,
         ),
